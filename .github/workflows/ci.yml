@@ -36,4 +36,15 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run start --workspace @chronolens/api > /tmp/chronolens-api.log 2>&1 &
-      - run: sleep 5 && npm run smoke:http
+      - name: Wait for API
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:3021/health > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/chronolens-api.log
+          exit 1
+      - name: Smoke HTTP
+        run: npm run smoke:http || { cat /tmp/chronolens-api.log; exit 1; }
