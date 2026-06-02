@@ -11,6 +11,9 @@ CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/run
 GitHub CLI local : `gh` installe et authentifie avec les scopes `repo` et
 `workflow`.
 
+Protection de branche `main` : pull request obligatoire, check `verify` requis,
+resolution des conversations obligatoire, force-push et suppression interdits.
+
 ## Regle de maintenance
 
 Mettre ce fichier a jour apres chaque tranche fonctionnelle terminee, apres toute
@@ -215,8 +218,7 @@ Preparer le deploiement partage :
 
 1. choisir la plateforme cible et son gestionnaire de secrets ;
 2. remplacer les comptes de demonstration par un fournisseur d'identite adapte ;
-3. configurer les regles de protection de la branche `main` selon le workflow de
-   l'equipe ;
+3. choisir le nombre d'approbations humaines requis pour les pull requests ;
 4. lancer un benchmark sur un graphe representatif de production.
 
 ## Backlog restant
