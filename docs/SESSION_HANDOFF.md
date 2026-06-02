@@ -6,7 +6,7 @@ Depot distant : `https://github.com/Ikaff2024/ChronoLens.git`
 
 Branche publiee : `main`
 
-CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26844921896`
+CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26845424352`
 
 GitHub CLI local : `gh` installe et authentifie avec les scopes `repo` et
 `workflow`.
@@ -85,6 +85,8 @@ Maintenance automatisee du depot :
   healthchecks et smoke HTTP reels valides ;
 - propositions npm Dependabot limitees aux versions mineures et correctives ;
   les migrations majeures restent des tranches dediees.
+- `class-validator` actualise de `0.14.4` a `0.15.1` apres validation CI et smoke
+  HTTP.
 
 ## Tranche fonctionnelle precedente
 
