@@ -6,7 +6,7 @@ Depot distant : `https://github.com/Ikaff2024/ChronoLens.git`
 
 Branche publiee : `main`
 
-CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26842512309`
+CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26843536662`
 
 GitHub CLI local : `gh` installe et authentifie avec les scopes `repo` et
 `workflow`.
@@ -64,8 +64,24 @@ Le MVP local est fonctionnel de bout en bout :
 - smoke HTTP CI autonome sur base vide et attente active du healthcheck.
 - CI distante GitHub Actions verte sur la branche `main`.
 - depot GitHub initialise et branche `main` publiee.
+- protection de `main` active avec PR et check `verify` obligatoires ;
+- mises a jour hebdomadaires Dependabot configurees pour npm, GitHub Actions et
+  les deux images Docker.
 
 ## Derniere tranche terminee
+
+Maintenance automatisee du depot :
+
+- protection de `main` active avec pull request obligatoire ;
+- check CI `verify` requis avant fusion ;
+- resolution des conversations obligatoire ;
+- force-push et suppression de la branche interdits ;
+- Dependabot hebdomadaire configure pour npm, GitHub Actions et les images
+  Docker de l'API et du web.
+- alertes de vulnerabilites et correctifs automatiques de securite GitHub
+  actives.
+
+## Tranche fonctionnelle precedente
 
 Durcissement et volumetrie du MVP :
 
@@ -203,7 +219,6 @@ scripts/
 - `npm audit --audit-level=high` retourne un code de succes mais signale deux
   vulnerabilites transitives moderees `postcss`. Le correctif automatique propose
   un downgrade Next majeur et ne doit pas etre applique sans analyse.
-- Le depot Git local est initialise mais aucun commit n'a encore ete cree.
 - Les identifiants locaux sont adaptes a une demonstration, pas a la production.
 - La suppression automatique reste volontairement desactivee. Toute future purge
   devra demander une validation operateur et produire une trace d'audit.
