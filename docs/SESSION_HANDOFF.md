@@ -216,16 +216,15 @@ scripts/
 
 - Le statut `UNHASHED` reste supporte pour toute preuve historique importee sans
   empreinte dans un autre environnement.
-- `npm audit --audit-level=high` retourne un code de succes mais signale deux
-  vulnerabilites transitives moderees `postcss`. Le correctif automatique propose
-  un downgrade Next majeur et ne doit pas etre applique sans analyse.
+- Next.js `15.5.19` declare encore `postcss@8.4.31`. Un override npm cible force
+  `postcss@8.5.15`, corrige pour `GHSA-qx2v-qp2m-jg93`. `npm audit` est propre,
+  mais `npm ls postcss --all` conserve un avertissement `invalid` jusqu'a ce que
+  Next.js actualise sa dependance publiee. Voir `docs/SECURITY_NOTES.md`.
 - Les identifiants locaux sont adaptes a une demonstration, pas a la production.
 - La suppression automatique reste volontairement desactivee. Toute future purge
   devra demander une validation operateur et produire une trace d'audit.
 - Une sauvegarde locale de controle `backups/chronolens-smoke.dump` a ete creee.
   Le dossier `backups/` est ignore par Git.
-- `npm audit --audit-level=high` signale encore deux vulnerabilites moderees
-  transitives `postcss`. Voir `docs/SECURITY_NOTES.md`.
 
 ## Prochaine tranche recommandee
 
