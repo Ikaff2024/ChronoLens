@@ -25,7 +25,14 @@ const headers = {
   Authorization: `Bearer ${login.token}`
 };
 const investigations = await call("/investigations?page=1&pageSize=10", { headers });
-const atlas = investigations.items.find((item) => item.title.includes("Atlas")) ?? investigations.items[0];
+let atlas = investigations.items.find((item) => item.title.includes("Atlas")) ?? investigations.items[0];
+if (!atlas) {
+  atlas = await call("/investigations", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ title: `CI smoke ${Date.now()}`, description: "Temporary smoke test dossier" })
+  });
+}
 const entities = await call(`/entities?investigationId=${atlas.id}&page=1&pageSize=10`, { headers });
 const evidence = await call(`/evidence?investigationId=${atlas.id}&page=1&pageSize=10`, { headers });
 const purge = await call("/auth/sessions/purge-expired", { method: "POST", headers });

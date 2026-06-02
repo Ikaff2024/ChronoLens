@@ -53,6 +53,7 @@ Le MVP local est fonctionnel de bout en bout :
 - CORS configurable et logs HTTP JSON ;
 - smoke test HTTP et benchmark PostgreSQL reproductibles ;
 - CI connectee a une vraie base PostgreSQL.
+- smoke HTTP CI autonome sur base vide et attente active du healthcheck.
 - depot GitHub initialise et branche `main` publiee.
 
 ## Derniere tranche terminee
@@ -208,7 +209,7 @@ Preparer le deploiement partage :
 
 1. choisir la plateforme cible et son gestionnaire de secrets ;
 2. remplacer les comptes de demonstration par un fournisseur d'identite adapte ;
-3. verifier l'execution de la CI distante GitHub Actions ;
+3. surveiller l'execution de la CI distante GitHub Actions ;
 4. lancer un benchmark sur un graphe representatif de production.
 
 ## Backlog restant
