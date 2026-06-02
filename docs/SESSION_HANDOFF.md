@@ -6,7 +6,7 @@ Depot distant : `https://github.com/Ikaff2024/ChronoLens.git`
 
 Branche publiee : `main`
 
-CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26843536662`
+CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26844921896`
 
 GitHub CLI local : `gh` installe et authentifie avec les scopes `repo` et
 `workflow`.
@@ -80,6 +80,11 @@ Maintenance automatisee du depot :
   Docker de l'API et du web.
 - alertes de vulnerabilites et correctifs automatiques de securite GitHub
   actives.
+- actions CI actualisees vers `actions/checkout@v6` et `actions/setup-node@v6` ;
+- images Docker API et web actualisees vers `node:26-alpine`, avec builds,
+  healthchecks et smoke HTTP reels valides ;
+- propositions npm Dependabot limitees aux versions mineures et correctives ;
+  les migrations majeures restent des tranches dediees.
 
 ## Tranche fonctionnelle precedente
 
