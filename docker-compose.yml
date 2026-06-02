@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: chronolens
+      POSTGRES_USER: chronolens
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-chronolens}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chronolens"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "5440:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://chronolens:${POSTGRES_PASSWORD:-chronolens}@postgres:5432/chronolens
+      PORT: 3001
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3020}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "3021:3001"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3021
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "3020:3000"
+
+volumes:
+  postgres_data:

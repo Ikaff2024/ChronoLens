@@ -1,0 +1,209 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum InvestigationStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum EntityType {
+  PERSON
+  ORGANIZATION
+  LOCATION
+  EVENT
+  DOCUMENT
+  ASSET
+  CONCEPT
+}
+
+enum RelationshipType {
+  EMPLOYEE
+  FOUNDER
+  INVESTOR
+  BOARD_MEMBER
+  FAMILY
+  FRIEND
+  COLLEAGUE
+  SUBSIDIARY
+  PARTNER
+  COMPETITOR
+  SUPPLIER
+  CUSTOMER
+  RESIDES
+  WORKS_AT
+  VISITED
+  ASSOCIATED
+  MENTIONED_WITH
+}
+
+enum EvidenceSource {
+  URL
+  CSV_IMPORT
+  MANUAL
+  PUBLIC_REGISTRY
+}
+
+enum AuditAction {
+  INVESTIGATION_CREATED
+  INVESTIGATION_UPDATED
+  INVESTIGATION_ARCHIVED
+  INVESTIGATION_PURGED
+  ENTITY_CREATED
+  ENTITIES_IMPORTED
+  RELATIONSHIP_CREATED
+  EVIDENCE_CREATED
+  EVIDENCE_HASH_BACKFILLED
+  EVIDENCE_INTEGRITY_VERIFIED
+  SESSIONS_EXPIRED_PURGED
+}
+
+enum OrganizationRole {
+  OWNER
+  ANALYST
+  VIEWER
+}
+
+model Organization {
+  id             String          @id
+  name           String
+  createdAt      DateTime        @default(now())
+  investigations Investigation[]
+  auditLogs      AuditLog[]
+  memberships    Membership[]
+}
+
+model User {
+  id           String       @id @default(uuid())
+  email        String       @unique
+  name         String
+  passwordHash String
+  mustChangePassword Boolean @default(false)
+  failedLoginAttempts Int    @default(0)
+  lockedUntil  DateTime?
+  createdAt    DateTime     @default(now())
+  memberships  Membership[]
+  sessions     Session[]
+}
+
+model Membership {
+  id             String           @id @default(uuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           OrganizationRole
+  createdAt      DateTime         @default(now())
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Investigation {
+  id            String              @id @default(uuid())
+  organizationId String?
+  organization   Organization?       @relation(fields: [organizationId], references: [id])
+  title         String
+  description   String?
+  status        InvestigationStatus @default(ACTIVE)
+  tags          String[]
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  entities      Entity[]
+  relationships Relationship[]
+  evidence      Evidence[]
+  auditLogs     AuditLog[]
+
+  @@index([organizationId])
+}
+
+model Entity {
+  id              String         @id @default(uuid())
+  investigationId String
+  investigation   Investigation  @relation(fields: [investigationId], references: [id], onDelete: Cascade)
+  type            EntityType
+  name            String
+  aliases         String[]
+  description     String?
+  metadata        Json
+  confidence      Float          @default(1)
+  firstSeen       DateTime?
+  lastSeen        DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  outgoing        Relationship[] @relation("source")
+  incoming        Relationship[] @relation("target")
+
+  @@index([investigationId])
+  @@index([name])
+}
+
+model Relationship {
+  id              String           @id @default(uuid())
+  investigationId String
+  investigation   Investigation    @relation(fields: [investigationId], references: [id], onDelete: Cascade)
+  sourceEntityId  String
+  sourceEntity    Entity           @relation("source", fields: [sourceEntityId], references: [id], onDelete: Cascade)
+  targetEntityId  String
+  targetEntity    Entity           @relation("target", fields: [targetEntityId], references: [id], onDelete: Cascade)
+  type            RelationshipType
+  description     String?
+  weight          Float            @default(1)
+  confidence      Float            @default(1)
+  validFrom       DateTime
+  validTo         DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([investigationId, validFrom])
+}
+
+model Evidence {
+  id              String         @id @default(uuid())
+  investigationId String
+  investigation   Investigation  @relation(fields: [investigationId], references: [id], onDelete: Cascade)
+  source          EvidenceSource
+  title           String
+  url             String?
+  capturedAt      DateTime
+  occurredAt      DateTime?
+  contentHash     String?
+  notes           String?
+  createdAt       DateTime       @default(now())
+
+  @@index([investigationId, capturedAt])
+}
+
+model AuditLog {
+  id              String        @id @default(uuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  investigationId String?
+  investigation   Investigation? @relation(fields: [investigationId], references: [id], onDelete: Cascade)
+  actorId         String
+  action          AuditAction
+  resourceType    String
+  resourceId      String?
+  details         Json
+  createdAt       DateTime      @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([investigationId, createdAt])
+}
