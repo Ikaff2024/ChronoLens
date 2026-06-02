@@ -6,6 +6,8 @@ Depot distant : `https://github.com/Ikaff2024/ChronoLens.git`
 
 Branche publiee : `main`
 
+CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26842512309`
+
 ## Regle de maintenance
 
 Mettre ce fichier a jour apres chaque tranche fonctionnelle terminee, apres toute
@@ -54,6 +56,7 @@ Le MVP local est fonctionnel de bout en bout :
 - smoke test HTTP et benchmark PostgreSQL reproductibles ;
 - CI connectee a une vraie base PostgreSQL.
 - smoke HTTP CI autonome sur base vide et attente active du healthcheck.
+- CI distante GitHub Actions verte sur la branche `main`.
 - depot GitHub initialise et branche `main` publiee.
 
 ## Derniere tranche terminee
@@ -209,7 +212,8 @@ Preparer le deploiement partage :
 
 1. choisir la plateforme cible et son gestionnaire de secrets ;
 2. remplacer les comptes de demonstration par un fournisseur d'identite adapte ;
-3. surveiller l'execution de la CI distante GitHub Actions ;
+3. configurer les regles de protection de la branche `main` selon le workflow de
+   l'equipe ;
 4. lancer un benchmark sur un graphe representatif de production.
 
 ## Backlog restant
