@@ -8,6 +8,9 @@ Branche publiee : `main`
 
 CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26842512309`
 
+GitHub CLI local : `gh` installe et authentifie avec les scopes `repo` et
+`workflow`.
+
 ## Regle de maintenance
 
 Mettre ce fichier a jour apres chaque tranche fonctionnelle terminee, apres toute
