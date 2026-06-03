@@ -1,6 +1,6 @@
 # ChronoLens OSINT - Journal de reprise
 
-Derniere mise a jour : 2026-06-02
+Derniere mise a jour : 2026-06-03
 
 Depot distant : `https://github.com/Ikaff2024/ChronoLens.git`
 
@@ -69,6 +69,23 @@ Le MVP local est fonctionnel de bout en bout :
   les deux images Docker.
 
 ## Derniere tranche terminee
+
+Benchmark representatif PostgreSQL et pagination timeline :
+
+- script `benchmark:seed` pour generer un dossier synthetique idempotent ;
+- graphe local mesure : 1 000 entites, 5 000 relations, 500 preuves, soit
+  6 500 evenements timeline ;
+- endpoint timeline retrocompatible : reponse complete sans `page`, reponse
+  paginee avec `page` et `pageSize` ;
+- interface timeline paginee par 25 evenements avec precedent/suivant ;
+- optimisation serveur : lectures Prisma bornees aux candidats necessaires pour
+  la page, avec total calcule par comptages ;
+- benchmark representatif apres optimisation : timeline page 1 p95 `25.10 ms`,
+  contre `896.21 ms` avant optimisation serveur ;
+- verification navigateur locale : total `6500 evenements`, 25 items visibles et
+  passage a `Page 2` fonctionnel.
+
+## Tranche precedente
 
 Maintenance automatisee du depot :
 

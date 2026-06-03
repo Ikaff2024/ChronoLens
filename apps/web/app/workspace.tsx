@@ -72,6 +72,8 @@ export function Workspace() {
   const [investigationTotal, setInvestigationTotal] = useState(0);
   const [selected, setSelected] = useState<Investigation | null>(null);
   const [timeline, setTimeline] = useState<TimelineItem[]>([]);
+  const [timelinePage, setTimelinePage] = useState(1);
+  const [timelineTotal, setTimelineTotal] = useState(0);
   const [audit, setAudit] = useState<AuditItem[]>([]);
   const [entities, setEntities] = useState<Entity[]>([]);
   const [entityPage, setEntityPage] = useState(1);
@@ -122,7 +124,7 @@ export function Workspace() {
 
   const loadSelected = useCallback(async (investigation: Investigation) => {
     const [timelineItems, auditItems, entityItems, relationshipItems, alertItems, evidenceItems, governanceItem] = await Promise.all([
-      api<TimelineItem[]>(`/investigations/${investigation.id}/timeline`, token),
+      api<PageResult<TimelineItem>>(`/investigations/${investigation.id}/timeline?page=${timelinePage}&pageSize=25`, token),
       api<AuditItem[]>(`/investigations/${investigation.id}/audit`, token),
       api<PageResult<Entity>>(`/entities?investigationId=${investigation.id}&page=${entityPage}&pageSize=25`, token),
       api<PageResult<Relationship>>(`/relationships?investigationId=${investigation.id}&page=1&pageSize=50`, token),
@@ -130,7 +132,8 @@ export function Workspace() {
       api<PageResult<Evidence>>(`/evidence?investigationId=${investigation.id}&page=1&pageSize=50`, token),
       api<Governance>(`/investigations/${investigation.id}/governance`, token)
     ]);
-    setTimeline(timelineItems);
+    setTimeline(timelineItems.items);
+    setTimelineTotal(timelineItems.total);
     setAudit(auditItems);
     setEntities(entityItems.items);
     setEntityTotal(entityItems.total);
@@ -141,7 +144,7 @@ export function Workspace() {
     setEvidenceTotal(evidenceItems.total);
     setEvidenceIntegrity({});
     setGovernance(governanceItem);
-  }, [entityPage, token]);
+  }, [entityPage, timelinePage, token]);
 
   const loadMembers = useCallback(async () => {
     if (!token || profile?.memberships[0]?.role !== "OWNER") return;
@@ -200,6 +203,8 @@ export function Workspace() {
     setInvestigations([]);
     setInvestigationTotal(0);
     setSelected(null);
+    setTimelinePage(1);
+    setTimelineTotal(0);
   }
 
   async function logout() {
@@ -462,14 +467,15 @@ export function Workspace() {
         <aside className="panel">
           <div className="panel-title"><h3>Dossiers</h3><span>{investigationTotal}</span></div>
           <div className="cases">
-            {investigations.map((investigation) => <button className={selected?.id === investigation.id ? "case active" : "case"} key={investigation.id} onClick={() => setSelected(investigation)}><strong>{investigation.title}</strong><small>{investigation.description || "Sans description"}</small><span>{investigation._count?.entities ?? 0} entites · {investigation._count?.evidence ?? 0} preuves</span></button>)}
+            {investigations.map((investigation) => <button className={selected?.id === investigation.id ? "case active" : "case"} key={investigation.id} onClick={() => { setTimelinePage(1); setSelected(investigation); }}><strong>{investigation.title}</strong><small>{investigation.description || "Sans description"}</small><span>{investigation._count?.entities ?? 0} entites · {investigation._count?.evidence ?? 0} preuves</span></button>)}
           </div>
           <form onSubmit={createInvestigation}><h3>Nouveau dossier</h3><input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Titre" minLength={3} required /><textarea value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Contexte de l'investigation" /><button className="primary" type="submit">Creer l&apos;investigation</button></form>
         </aside>
         <section className="panel timeline">
-          <div className="panel-title"><div><p className="eyebrow">Timeline</p><h3>{selected?.title ?? "Selectionnez un dossier"}</h3></div><span>{timeline.length} evenements</span></div>
+          <div className="panel-title"><div><p className="eyebrow">Timeline</p><h3>{selected?.title ?? "Selectionnez un dossier"}</h3></div><span>{timelineTotal} evenements</span></div>
           <div className="export-actions"><button onClick={() => void downloadExport("json")} disabled={!selected}>Exporter JSON</button><button onClick={() => void downloadExport("timeline.csv")} disabled={!selected}>Exporter CSV</button></div>
           <div className="timeline-list">{timeline.map((item) => <article className="timeline-item" key={`${item.kind}-${item.id}`}><div className={`dot ${item.kind.toLowerCase()}`} /><div><time>{new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium" }).format(new Date(item.timestamp))}</time><h4>{item.title}</h4>{item.description && <p>{item.description}</p>}<small>{item.kind}</small></div></article>)}</div>
+          <div className="pagination"><button onClick={() => setTimelinePage((page) => Math.max(1, page - 1))} disabled={timelinePage === 1}>Precedent</button><span>Page {timelinePage}</span><button onClick={() => setTimelinePage((page) => page + 1)} disabled={timelinePage * 25 >= timelineTotal}>Suivant</button></div>
         </section>
       </div>
       <div className="operations">
