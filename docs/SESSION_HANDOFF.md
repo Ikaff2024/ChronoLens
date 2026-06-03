@@ -6,7 +6,7 @@ Depot distant : `https://github.com/Ikaff2024/ChronoLens.git`
 
 Branche publiee : `main`
 
-CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26845424352`
+CI GitHub Actions validee : `https://github.com/Ikaff2024/ChronoLens/actions/runs/26861521905`
 
 GitHub CLI local : `gh` installe et authentifie avec les scopes `repo` et
 `workflow`.
@@ -72,6 +72,9 @@ Le MVP local est fonctionnel de bout en bout :
 
 Preparation Railway :
 
+- PR fusionnee : `https://github.com/Ikaff2024/ChronoLens/pull/11` ;
+- CI post-merge `main` validee :
+  `https://github.com/Ikaff2024/ChronoLens/actions/runs/26861521905` ;
 - cible de production choisie : Railway ;
 - runbook `docs/RAILWAY_DEPLOYMENT.md` ajoute ;
 - API forcee a ecouter sur `0.0.0.0:$PORT` ;
