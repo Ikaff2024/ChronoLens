@@ -12,9 +12,10 @@
     "test": "npm run test --workspaces --if-present",
     "db:generate": "npm run db:generate --workspace @chronolens/api",
     "db:push": "npm run db:push --workspace @chronolens/api",
-    "db:migrate:deploy": "npm run db:migrate:deploy --workspace @chronolens/api"
-    ,"smoke:http": "node scripts/smoke-http.mjs"
-    ,"benchmark:postgres": "node scripts/benchmark-postgres.mjs"
+    "db:migrate:deploy": "npm run db:migrate:deploy --workspace @chronolens/api",
+    "smoke:http": "node scripts/smoke-http.mjs",
+    "benchmark:seed": "node scripts/seed-benchmark-graph.mjs",
+    "benchmark:postgres": "node scripts/benchmark-postgres.mjs"
   },
   "engines": {
     "node": ">=22"
