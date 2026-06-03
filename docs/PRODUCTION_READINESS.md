@@ -1,6 +1,6 @@
 # ChronoLens OSINT - Preparation production
 
-Version : 2026-06-02
+Version : 2026-06-03
 
 ## Secrets et configuration
 
@@ -29,3 +29,16 @@ Version : 2026-06-02
 - Planifier des sauvegardes chiffrees et tester regulierement une restauration.
 - Executer `prisma migrate deploy` avant chaque demarrage applicatif.
 - Conserver la politique de retention de `docs/DATA_GOVERNANCE.md`.
+
+## Railway
+
+La cible de deploiement retenue est Railway. Le runbook detaille est dans
+`docs/RAILWAY_DEPLOYMENT.md`.
+
+Points importants :
+
+- deployer trois services Railway : Postgres, API et web ;
+- garder le contexte de build a la racine du monorepo ;
+- definir `RAILWAY_DOCKERFILE_PATH` par service ;
+- configurer `NEXT_PUBLIC_API_URL` avant le build du web ;
+- configurer `ALLOWED_ORIGINS` avec le domaine public web final.
