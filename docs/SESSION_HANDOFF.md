@@ -70,6 +70,19 @@ Le MVP local est fonctionnel de bout en bout :
 
 ## Derniere tranche terminee
 
+Preparation Railway :
+
+- cible de production choisie : Railway ;
+- runbook `docs/RAILWAY_DEPLOYMENT.md` ajoute ;
+- API forcee a ecouter sur `0.0.0.0:$PORT` ;
+- conteneur web compatible avec le `PORT` fourni par Railway ;
+- CI etendue avec build Docker API et web pour valider le chemin de deploiement
+  Railway ;
+- variables Railway documentees pour `Postgres`, `chronolens-api` et
+  `chronolens-web`.
+
+## Tranche precedente
+
 Benchmark representatif PostgreSQL et pagination timeline :
 
 - script `benchmark:seed` pour generer un dossier synthetique idempotent ;

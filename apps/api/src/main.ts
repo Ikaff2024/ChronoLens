@@ -23,8 +23,8 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   const port = process.env.PORT ?? 3021;
-  await app.listen(port);
-  logger.log(`ChronoLens API listening on port ${port}`);
+  await app.listen(port, "0.0.0.0");
+  logger.log(`ChronoLens API listening on 0.0.0.0:${port}`);
 }
 
 void bootstrap();

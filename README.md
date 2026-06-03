@@ -13,6 +13,7 @@ et des preuves, puis de consulter une timeline agrégée.
 - `docs/DATA_GOVERNANCE.md`: politique initiale de collecte, retention et suppression.
 - `docs/POSTGRES_OPERATIONS.md`: migrations, sauvegarde, restauration et maintenance.
 - `docs/PRODUCTION_READINESS.md`: secrets, reseau et observabilite de production.
+- `docs/RAILWAY_DEPLOYMENT.md`: runbook de deploiement Railway.
 - `docs/POSTGRES_BENCHMARK.md`: protocole de mesure avant toute decision Neo4j.
 - `docs/SECURITY_NOTES.md`: dette de dependances et controles de securite.
 - `docs/adr`: décisions d'architecture.

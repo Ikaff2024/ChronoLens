@@ -36,6 +36,8 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - run: docker build --file apps/api/Dockerfile --tag chronolens-api-ci .
+      - run: docker build --file apps/web/Dockerfile --build-arg NEXT_PUBLIC_API_URL=http://localhost:3021 --tag chronolens-web-ci .
       - run: npm run start --workspace @chronolens/api > /tmp/chronolens-api.log 2>&1 &
       - name: Wait for API
         run: |
